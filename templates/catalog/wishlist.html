@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}علاقه‌مندی‌ها | {{ SITE_NAME }}{% endblock %}
+{% block content %}<h1 style="margin-top:24px">علاقه‌مندی‌های من</h1>
+{% if items %}<div class="grid">{% for it in items %}{% with p=it.product %}{% include "partials/product_card.html" %}{% endwith %}{% endfor %}</div>
+{% else %}<div class="panel">فهرست علاقه‌مندی شما خالی است.</div>{% endif %}{% endblock %}

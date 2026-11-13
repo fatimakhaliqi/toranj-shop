@@ -1,0 +1,16 @@
+{% load shop_tags %}
+<article class="card">
+  <a href="{{ p.get_absolute_url }}" class="thumb">
+    {% if p.main_image %}<img src="{{ p.main_image.url }}" alt="{{ p.name }}" loading="lazy">{% else %}<span>{{ p.category.icon }}</span>{% endif %}
+    {% if p.discount_percent %}<span class="off">{{ p.discount_percent|fa }}٪</span>{% endif %}
+  </a>
+  <div class="card-b">
+    <h3><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></h3>
+    {% if p.review_count %}<div class="stars">{{ p.avg_rating|stars }} <span class="muted">({{ p.review_count|fa }})</span></div>{% endif %}
+    {% if p.in_stock %}
+      <div><span class="price">{{ p.price|toman }}</span>{% if p.discount_percent %}<span class="old">{{ p.compare_at_price|num }}</span>{% endif %}</div>
+      <form method="post" action="{% url 'cart:add' p.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button class="btn sm block" type="submit">افزودن به سبد</button></form>
+    {% else %}<div class="out">ناموجود</div>{% endif %}
+  </div>
+</article>

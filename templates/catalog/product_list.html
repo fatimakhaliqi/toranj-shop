@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% load shop_tags %}
+{% block title %}{% if category %}{{ category.name }}{% elif q %}جستجوی «{{ q }}»{% else %}همه محصولات{% endif %} | {{ SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="crumbs"><a href="{% url 'home' %}">خانه</a> / {% if category %}{{ category.name }}{% else %}محصولات{% endif %}</div>
+<div class="shop">
+  <aside class="panel filters">
+    <form method="get">
+      {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}<input type="hidden" name="sort" value="{{ sort }}">
+      <h3>فیلترها</h3>
+      <label>حداقل قیمت (تومان)</label><input name="min" inputmode="numeric" value="{{ min }}">
+      <label>حداکثر قیمت (تومان)</label><input name="max" inputmode="numeric" value="{{ max }}">
+      <label style="margin-top:14px"><input type="checkbox" name="in_stock" value="1" {% if in_stock %}checked{% endif %}> فقط کالاهای موجود</label>
+      <label><input type="checkbox" name="discount" value="1" {% if discount %}checked{% endif %}> فقط تخفیف‌دار</label>
+      <button class="btn block" style="margin-top:14px">اعمال فیلتر</button>
+    </form>
+    <h3 style="margin-top:22px">دسته‌بندی‌ها</h3>
+    {% for c in nav_categories %}<a class="side-nav" style="display:block;padding:4px 0" href="{{ c.get_absolute_url }}">{{ c.icon }} {{ c.name }}</a>{% endfor %}
+  </aside>
+  <section>
+    <div class="toolbar"><h1 style="font-size:1.3rem;margin:0">{% if category %}{{ category.name }}{% elif q %}نتایج «{{ q }}»{% else %}همه محصولات{% endif %}
+      <small class="muted">({{ page.paginator.count|fa }} کالا)</small></h1>
+      <div class="sortlinks">{% for key, s in sorts.items %}<a class="{% if sort == key %}on{% endif %}" href="?{% qs_replace sort=key page=1 %}">{{ s.0 }}</a>{% endfor %}</div></div>
+    {% if page.object_list %}<div class="grid">{% for p in page.object_list %}{% include "partials/product_card.html" %}{% endfor %}</div>
+    {% else %}<div class="panel" style="text-align:center">محصولی پیدا نشد. فیلترها را تغییر دهید.</div>{% endif %}
+    {% include "partials/pager.html" %}
+  </section>
+</div>
+{% endblock %}

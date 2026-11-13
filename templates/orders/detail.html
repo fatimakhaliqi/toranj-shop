@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% load shop_tags %}
+{% block title %}سفارش {{ order.code|fa }} | {{ SITE_NAME }}{% endblock %}
+{% block content %}<h1 style="margin-top:24px">سفارش {{ order.code|fa }} <span class="pill {{ order.status }}">{{ order.get_status_display }}</span></h1>
+<div class="co-grid">
+  <div class="panel" style="overflow-x:auto"><table><tr><th>کالا</th><th>قیمت</th><th>تعداد</th><th>جمع</th></tr>
+    {% for i in order.items.all %}<tr><td>{{ i.product_name }}</td><td>{{ i.unit_price|toman }}</td><td>{{ i.quantity|fa }}</td><td>{{ i.line_total|toman }}</td></tr>{% endfor %}</table>
+    <h3 style="margin-top:20px">آدرس تحویل</h3>
+    <p>{{ order.full_name }} — {{ order.phone|fa }}<br>{{ order.province }}، {{ order.city }}<br>{{ order.address }}<br>کد پستی: {{ order.postal_code|fa }}</p>
+    {% if order.tracking_code %}<p>کد رهگیری پست: <b>{{ order.tracking_code }}</b></p>{% endif %}
+  </div>
+  <aside class="panel sum"><h3>صورت‌حساب</h3>
+    <div><span>تاریخ ثبت</span><span>{{ order.created_at|jdate }}</span></div>
+    <div><span>جمع کالاها</span><span>{{ order.subtotal|toman }}</span></div>
+    {% if order.discount %}<div><span>تخفیف</span><span>− {{ order.discount|toman }}</span></div>{% endif %}
+    <div><span>ارسال</span><span>{% if order.shipping %}{{ order.shipping|toman }}{% else %}رایگان{% endif %}</span></div>
+    <div class="tot"><span>مبلغ کل</span><span>{{ order.total|toman }}</span></div>
+    {% if order.can_pay %}
+      <form method="post" action="{% url 'payments:start' order.code %}">{% csrf_token %}<button class="btn accent block" style="margin-top:12px">پرداخت آنلاین</button></form>
+      <form method="post" action="{% url 'orders:cancel' order.code %}" data-confirm="سفارش لغو شود؟">{% csrf_token %}<button class="btn danger block sm" style="margin-top:8px">لغو سفارش</button></form>
+      <p class="muted" style="font-size:.8rem">سفارش پرداخت‌نشده پس از مدتی به‌طور خودکار لغو می‌شود.</p>
+    {% endif %}
+  </aside>
+</div>{% endblock %}

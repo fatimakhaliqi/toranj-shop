@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% load shop_tags %}
+{% block title %}سفارش‌های من | {{ SITE_NAME }}{% endblock %}
+{% block content %}<h1 style="margin-top:24px">سفارش‌های من</h1>
+{% if orders %}<div class="panel" style="overflow-x:auto"><table><tr><th>شماره</th><th>تاریخ</th><th>مبلغ</th><th>وضعیت</th><th></th></tr>
+{% for o in orders %}<tr><td>{{ o.code|fa }}</td><td>{{ o.created_at|jdate }}</td><td>{{ o.total|toman }}</td><td><span class="pill {{ o.status }}">{{ o.get_status_display }}</span></td><td><a class="btn sm ghost" href="{{ o.get_absolute_url }}">جزئیات</a></td></tr>{% endfor %}</table></div>
+{% else %}<div class="panel">هنوز سفارشی ثبت نکرده‌اید.</div>{% endif %}{% endblock %}

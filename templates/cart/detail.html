@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% load shop_tags %}
+{% block title %}سبد خرید | {{ SITE_NAME }}{% endblock %}
+{% block content %}<h1 style="margin-top:24px">سبد خرید</h1>
+{% if items %}
+<div class="cart-grid">
+  <div class="panel" style="overflow-x:auto"><table>
+    <tr><th>کالا</th><th>قیمت</th><th>تعداد</th><th>جمع</th><th></th></tr>
+    {% for i in items %}<tr>
+      <td><a href="{{ i.product.get_absolute_url }}"><b>{{ i.product.name }}</b></a></td>
+      <td>{{ i.unit_price|toman }}</td>
+      <td><form method="post" action="{% url 'cart:update' i.product.pk %}" class="row">{% csrf_token %}
+        <input class="qty" type="number" name="quantity" min="1" max="{{ i.product.stock }}" value="{{ i.quantity }}"><button class="btn sm ghost">به‌روزرسانی</button></form></td>
+      <td>{{ i.line_total|toman }}</td>
+      <td><form method="post" action="{% url 'cart:remove' i.product.pk %}">{% csrf_token %}<button class="btn sm danger">حذف</button></form></td>
+    </tr>{% endfor %}</table></div>
+  <aside class="panel sum">
+    <h3>خلاصه سفارش</h3>
+    <div><span>جمع کالاها</span><span>{{ cart.subtotal|toman }}</span></div>
+    {% if cart.discount %}<div style="color:var(--ok)"><span>تخفیف ({{ cart.coupon_code }})</span><span>− {{ cart.discount|toman }}</span></div>{% endif %}
+    <div><span>هزینه ارسال</span><span>{% if cart.shipping %}{{ cart.shipping|toman }}{% else %}رایگان{% endif %}</span></div>
+    <div class="tot"><span>قابل پرداخت</span><span>{{ cart.total|toman }}</span></div>
+    {% if cart.coupon_code %}<form method="post" action="{% url 'cart:coupon_remove' %}">{% csrf_token %}<button class="btn sm ghost">حذف کد تخفیف</button></form>
+    {% else %}<form method="post" action="{% url 'cart:coupon_apply' %}" class="row" style="margin:10px 0">{% csrf_token %}<input name="code" placeholder="کد تخفیف" maxlength="30"><button class="btn sm">ثبت</button></form>{% endif %}
+    <a class="btn accent block" style="margin-top:12px" href="{% url 'orders:checkout' %}">ادامه و ثبت سفارش</a>
+  </aside>
+</div>
+{% else %}<div class="panel" style="text-align:center;padding:50px"><div style="font-size:3rem">🛒</div><p>سبد خرید شما خالی است.</p><a class="btn" href="{% url 'catalog:list' %}">مشاهده محصولات</a></div>{% endif %}
+{% endblock %}

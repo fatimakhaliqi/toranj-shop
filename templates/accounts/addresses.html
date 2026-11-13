@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% load shop_tags %}
+{% block title %}آدرس‌ها | {{ SITE_NAME }}{% endblock %}
+{% block content %}<div class="toolbar" style="margin-top:24px"><h1>آدرس‌های من</h1><a class="btn" href="{% url 'accounts:address_new' %}">+ آدرس جدید</a></div>
+{% for a in addresses %}<div class="panel" style="margin-bottom:12px"><b>{{ a.full_name }}</b> {% if a.is_default %}<span class="pill">پیش‌فرض</span>{% endif %}
+<p>{{ a.province }}، {{ a.city }}، {{ a.address }}<br>کد پستی {{ a.postal_code|fa }} · {{ a.phone|fa }}</p>
+<div class="row" style="max-width:240px"><a class="btn sm ghost" href="{% url 'accounts:address_edit' a.pk %}">ویرایش</a>
+<form method="post" action="{% url 'accounts:address_delete' a.pk %}" data-confirm="آدرس حذف شود؟">{% csrf_token %}<button class="btn sm danger block">حذف</button></form></div></div>
+{% empty %}<div class="panel">آدرسی ثبت نشده است.</div>{% endfor %}{% endblock %}

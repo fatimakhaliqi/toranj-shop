@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% load shop_tags %}
+{% block title %}حساب من | {{ SITE_NAME }}{% endblock %}
+{% block content %}<h1 style="margin-top:24px">حساب کاربری</h1>
+<div class="shop"><aside class="panel side-nav"><a href="{% url 'accounts:dashboard' %}">👤 پروفایل</a><a href="{% url 'orders:list' %}">📦 سفارش‌ها</a><a href="{% url 'accounts:addresses' %}">📍 آدرس‌ها</a><a href="{% url 'catalog:wishlist' %}">♡ علاقه‌مندی‌ها</a><a href="{% url 'accounts:password_change' %}">🔑 تغییر رمز</a></aside>
+<section>
+  <div class="panel"><h3>اطلاعات شخصی</h3><p class="muted">نام کاربری: {{ user.username }} · ایمیل: {{ user.email }}</p>
+  <form method="post" novalidate style="max-width:460px">{% csrf_token %}{% include "partials/form_fields.html" %}<button class="btn" style="margin-top:14px">ذخیره</button></form></div>
+  {% if orders %}<div class="panel" style="margin-top:18px"><h3>آخرین سفارش‌ها</h3><table>{% for o in orders %}<tr><td>{{ o.code|fa }}</td><td>{{ o.created_at|jdate }}</td><td>{{ o.total|toman }}</td><td><span class="pill {{ o.status }}">{{ o.get_status_display }}</span></td><td><a href="{{ o.get_absolute_url }}">جزئیات</a></td></tr>{% endfor %}</table></div>{% endif %}
+</section></div>{% endblock %}

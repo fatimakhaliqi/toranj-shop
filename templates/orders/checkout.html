@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% load shop_tags %}
+{% block title %}ثبت سفارش | {{ SITE_NAME }}{% endblock %}
+{% block content %}<h1 style="margin-top:24px">ثبت سفارش</h1>
+<div class="co-grid">
+  <form method="post" class="panel" novalidate>{% csrf_token %}
+    <h3>آدرس تحویل</h3>
+    {% include "partials/form_fields.html" %}
+    <button class="btn accent" style="margin-top:16px">ثبت سفارش و رفتن به پرداخت</button>
+  </form>
+  <aside class="panel sum"><h3>سفارش شما</h3>
+    {% for i in cart.items %}<div><span>{{ i.product.name }} × {{ i.quantity|fa }}</span><span>{{ i.line_total|num }}</span></div>{% endfor %}
+    <div class="tot"><span>جمع کالاها</span><span>{{ cart.subtotal|toman }}</span></div>
+    {% if cart.discount %}<div><span>تخفیف</span><span>− {{ cart.discount|toman }}</span></div>{% endif %}
+    <div><span>ارسال</span><span>{% if cart.shipping %}{{ cart.shipping|toman }}{% else %}رایگان{% endif %}</span></div>
+    <div class="tot"><span>قابل پرداخت</span><span>{{ cart.total|toman }}</span></div>
+  </aside>
+</div>{% endblock %}

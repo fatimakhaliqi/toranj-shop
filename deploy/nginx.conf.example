@@ -1,0 +1,36 @@
+# /etc/nginx/sites-available/shop  (بعد از گرفتن گواهی SSL با certbot)
+limit_req_zone $binary_remote_addr zone=login:10m rate=10r/m;
+
+server {
+    listen 80;
+    server_name YOURDOMAIN.ir www.YOURDOMAIN.ir;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name YOURDOMAIN.ir www.YOURDOMAIN.ir;
+
+    ssl_certificate     /etc/letsencrypt/live/YOURDOMAIN.ir/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/YOURDOMAIN.ir/privkey.pem;
+
+    client_max_body_size 6M;
+    server_tokens off;
+
+    location /media/ { alias /srv/shop/media/; expires 30d; }
+    location /static/ { alias /srv/shop/staticfiles/; expires 30d; }
+
+    location = /accounts/login/ {
+        limit_req zone=login burst=10 nodelay;
+        include proxy_params_shop;
+    }
+
+    location / { include proxy_params_shop; }
+}
+
+# /etc/nginx/proxy_params_shop :
+#   proxy_pass http://unix:/run/shop.sock;
+#   proxy_set_header Host $host;
+#   proxy_set_header X-Real-IP $remote_addr;
+#   proxy_set_header X-Forwarded-For $remote_addr;   # عمدا overwrite (نه append) تا جعل IP ممکن نباشد
+#   proxy_set_header X-Forwarded-Proto $scheme;

@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block content %}<div class="panel auth" style="text-align:center"><h1 style="font-size:1.4rem">{{ title }}</h1><p>{{ text }}</p>
+{% if link %}<a class="btn" href="{% url link %}">{{ link_text }}</a>{% endif %}</div>{% endblock %}

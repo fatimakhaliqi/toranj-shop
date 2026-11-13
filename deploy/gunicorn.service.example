@@ -1,0 +1,15 @@
+# /etc/systemd/system/shop.service
+[Unit]
+Description=Shop (gunicorn)
+After=network.target postgresql.service
+
+[Service]
+User=shop
+Group=www-data
+WorkingDirectory=/srv/shop
+ExecStart=/srv/shop/venv/bin/gunicorn config.wsgi:application --workers 3 --bind unix:/run/shop.sock --timeout 30
+Restart=on-failure
+RuntimeDirectory=shop
+
+[Install]
+WantedBy=multi-user.target

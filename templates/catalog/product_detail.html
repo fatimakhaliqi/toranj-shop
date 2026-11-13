@@ -1,0 +1,37 @@
+{% extends "base.html" %}{% load shop_tags %}
+{% block title %}{{ product.name }} | {{ SITE_NAME }}{% endblock %}
+{% block desc %}{{ product.short_description|default:product.name }}{% endblock %}
+{% block content %}
+<div class="crumbs"><a href="{% url 'home' %}">خانه</a> / <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a> / {{ product.name }}</div>
+<div class="pd">
+  <div class="gallery">
+    <div class="main">{% if images %}<img id="main-img" src="{{ images.0.image.url }}" alt="{{ images.0.alt|default:product.name }}">{% else %}<span>{{ product.category.icon }}</span>{% endif %}</div>
+    {% if images|length > 1 %}<div class="thumbs">{% for im in images %}<img src="{{ im.image.url }}" data-thumb="{{ im.image.url }}" alt="{{ im.alt }}">{% endfor %}</div>{% endif %}
+  </div>
+  <div class="panel">
+    <h1 style="font-size:1.6rem">{{ product.name }}</h1>
+    <div class="muted">کد کالا: {{ product.sku }}{% if product.review_count %} · <span class="stars">{{ product.avg_rating|stars }}</span> ({{ product.review_count|fa }} نظر){% endif %}</div>
+    <p>{{ product.short_description }}</p>
+    <div class="big">{{ product.price|toman }} {% if product.discount_percent %}<span class="old">{{ product.compare_at_price|num }}</span> <span class="off" style="position:static;display:inline-block">{{ product.discount_percent|fa }}٪ تخفیف</span>{% endif %}</div>
+    {% if product.in_stock %}
+    <form method="post" action="{% url 'cart:add' product.pk %}" style="margin-top:16px">{% csrf_token %}
+      <div class="row" style="max-width:360px"><select name="quantity" aria-label="تعداد" style="max-width:90px">{% for n in qty_range %}<option value="{{ n }}">{{ n|fa }}</option>{% endfor %}</select>
+      <button class="btn accent">افزودن به سبد خرید</button></div>
+      {% if product.stock <= 5 %}<p class="out">فقط {{ product.stock|fa }} عدد در انبار باقی مانده</p>{% endif %}
+    </form>
+    {% else %}<p class="out" style="margin-top:16px">این کالا فعلا ناموجود است.</p>{% endif %}
+    {% if user.is_authenticated %}<form method="post" action="{% url 'catalog:wishlist_toggle' product.pk %}" style="margin-top:10px">{% csrf_token %}
+      <button class="btn ghost sm">{% if wished %}♥ حذف از علاقه‌مندی{% else %}♡ افزودن به علاقه‌مندی{% endif %}</button></form>{% endif %}
+  </div>
+</div>
+{% if product.description %}<section class="panel prose"><h2>معرفی محصول</h2>{{ product.description|linebreaks }}</section>{% endif %}
+<section class="panel" style="margin-top:20px"><h2>نظرات کاربران</h2>
+  {% for r in reviews %}<div class="review"><b>{{ r.user.first_name|default:r.user.username }}</b> <span class="stars">{{ r.rating|stars }}</span> <small class="muted">{{ r.created_at|jdate }}</small><p>{{ r.comment }}</p></div>
+  {% empty %}<p class="muted">هنوز نظری ثبت نشده است.</p>{% endfor %}
+  {% if user.is_authenticated %}
+  <h3 style="margin-top:18px">نظر خود را بنویسید</h3>
+  <form method="post" action="{% url 'catalog:review' product.pk %}" style="max-width:520px">{% csrf_token %}{% include "partials/form_fields.html" with form=review_form %}<button class="btn" style="margin-top:12px">ثبت نظر</button></form>
+  {% else %}<p><a href="{% url 'accounts:login' %}?next={{ request.path }}" style="color:var(--brand)">برای ثبت نظر وارد شوید</a></p>{% endif %}
+</section>
+{% if related %}<section class="sec"><div class="sec-h"><h2>محصولات مرتبط</h2></div><div class="grid">{% for p in related %}{% include "partials/product_card.html" %}{% endfor %}</div></section>{% endif %}
+{% endblock %}

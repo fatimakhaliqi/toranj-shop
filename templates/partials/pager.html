@@ -1,0 +1,7 @@
+{% load shop_tags %}{% if page.has_other_pages %}
+<div class="pager">
+  {% if page.has_previous %}<a href="?{% qs_replace page=page.previous_page_number %}">قبلی</a>{% endif %}
+  {% for n in page.paginator.page_range %}{% if n == page.number %}<span class="cur">{{ n|fa }}</span>
+  {% elif n > page.number|add:"-3" and n < page.number|add:"3" %}<a href="?{% qs_replace page=n %}">{{ n|fa }}</a>{% endif %}{% endfor %}
+  {% if page.has_next %}<a href="?{% qs_replace page=page.next_page_number %}">بعدی</a>{% endif %}
+</div>{% endif %}

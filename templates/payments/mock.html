@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% load shop_tags %}
+{% block content %}<div class="panel auth" style="text-align:center"><h2>درگاه آزمایشی (فقط حالت توسعه)</h2>
+<p>مبلغ: <b>{{ payment.amount|toman }}</b><br>سفارش {{ payment.order.code|fa }}</p>
+<form method="get" action="{% url 'payments:callback' %}"><input type="hidden" name="Authority" value="{{ payment.authority }}">
+<button class="btn" name="Status" value="OK">پرداخت موفق</button> <button class="btn danger" name="Status" value="NOK">پرداخت ناموفق</button></form></div>{% endblock %}

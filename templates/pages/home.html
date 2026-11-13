@@ -1,0 +1,45 @@
+{% extends "base.html" %}{% load shop_tags %}
+{% block content %}
+<section class="hero"><div class="hero-in">
+  <div>
+    <span class="pill" style="background:rgba(255,255,255,.2);color:#fff">✨ جشنواره‌ی خرید هوشمند</span>
+    <h1>هر چه نیاز دارید،<br>یک‌جا و با بهترین قیمت</h1>
+    <p>{{ SITE_NAME }} با ضمانت اصالت کالا، پرداخت امن و ارسال سریع به سراسر کشور در کنار شماست.</p>
+    <div class="actions">
+      <a class="btn accent" href="{% url 'catalog:list' %}">شروع خرید</a>
+      <a class="btn ghost" href="{% url 'catalog:list' %}?discount=1">🔥 دیدن تخفیف‌ها</a>
+    </div>
+  </div>
+  <div class="hero-art">
+    <div class="tile"><div class="em">🚚</div><b>ارسال سریع</b><small>به سراسر ایران</small></div>
+    <div class="tile"><div class="em">🛡️</div><b>ضمانت اصالت</b><small>۱۰۰٪ اورجینال</small></div>
+    <div class="tile"><div class="em">💳</div><b>پرداخت امن</b><small>درگاه معتبر بانکی</small></div>
+    <div class="tile"><div class="em">↩️</div><b>۷ روز بازگشت</b><small>بدون دردسر</small></div>
+  </div>
+</div></section>
+
+{% if categories %}<section class="sec"><div class="sec-h"><h2>دسته‌بندی‌ها</h2><a href="{% url 'catalog:list' %}">همه محصولات ←</a></div>
+  <div class="chips">{% for c in categories %}<a class="chip" href="{{ c.get_absolute_url }}"><span class="em">{{ c.icon }}</span>{{ c.name }}</a>{% endfor %}</div></section>{% endif %}
+
+{% if deals %}<section class="sec"><div class="deal-strip">
+  <div class="sec-h"><h2>🔥 پیشنهادهای شگفت‌انگیز</h2><a href="{% url 'catalog:list' %}?discount=1">مشاهده همه ←</a></div>
+  <div class="grid">{% for p in deals|slice:":4" %}{% include "partials/product_card.html" %}{% endfor %}</div></div></section>{% endif %}
+
+<section class="sec perks">
+  <div class="perk"><span class="em">🚚</span><div><b>ارسال رایگان</b><small>خرید بالای {{ FREE_SHIPPING_THRESHOLD|toman }}</small></div></div>
+  <div class="perk"><span class="em">🛡️</span><div><b>ضمانت اصالت</b><small>تضمین کیفیت و سلامت کالا</small></div></div>
+  <div class="perk"><span class="em">💬</span><div><b>پشتیبانی</b><small>پاسخگویی در ساعات کاری</small></div></div>
+  <div class="perk"><span class="em">🔒</span><div><b>خرید امن</b><small>پرداخت از طریق درگاه بانکی</small></div></div>
+</section>
+
+{% if newest %}<section class="sec"><div class="sec-h"><h2>جدیدترین‌ها</h2><a href="{% url 'catalog:list' %}">مشاهده همه ←</a></div>
+  <div class="grid">{% for p in newest|slice:":8" %}{% include "partials/product_card.html" %}{% endfor %}</div></section>{% endif %}
+
+<section class="sec promo">
+  <a href="{% url 'catalog:list' %}?sort=bestseller"><h3>پرفروش‌ترین‌ها</h3><p>محصولاتی که مشتریان بیشتر انتخاب کرده‌اند</p><span class="btn ghost" style="color:#fff;border-color:#fff">ببینید</span></a>
+  <a href="{% url 'catalog:list' %}?in_stock=1&sort=cheap"><h3>اقتصادی‌ها</h3><p>بهترین کالا با کمترین قیمت</p><span class="btn ghost" style="color:#fff;border-color:#fff">ببینید</span></a>
+</section>
+
+{% if bestsellers %}<section class="sec"><div class="sec-h"><h2>پرفروش‌ها</h2><a href="{% url 'catalog:list' %}?sort=bestseller">مشاهده همه ←</a></div>
+  <div class="grid">{% for p in bestsellers|slice:":4" %}{% include "partials/product_card.html" %}{% endfor %}</div></section>{% endif %}
+{% endblock %}

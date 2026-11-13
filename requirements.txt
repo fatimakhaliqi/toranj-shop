@@ -1,0 +1,8 @@
+Django>=5.2,<5.3
+Pillow>=10.0
+requests>=2.31
+jdatetime>=5.0
+whitenoise>=6.6
+gunicorn>=22.0
+psycopg[binary]>=3.1
+# اگر از Redis برای کش استفاده می‌کنید (متغیر REDIS_URL): redis>=5.0
