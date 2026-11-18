@@ -9,7 +9,7 @@ class SecurityHeadersMiddleware:
         "script-src 'self'; "
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com; "
-        "img-src 'self' data:; "
+        "img-src 'self' data: https://res.cloudinary.com; "
         "object-src 'none'; base-uri 'self'; "
         "form-action 'self' https://payment.zarinpal.com https://sandbox.zarinpal.com; "
         "frame-ancestors 'none'"
