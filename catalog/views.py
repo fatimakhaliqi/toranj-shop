@@ -98,7 +98,7 @@ def add_review(request, pk):
                       "is_approved": False})
         messages.success(request, "نظر شما ثبت شد و پس از تأیید نمایش داده می‌شود.")
     else:
-        messages.error(request, "نظر یا امتیاز معتبر نیست.")
+        messages.error(request, "نظر ثبت نشد: " + str(form.errors.as_text()))
     return redirect(product)
 
 
