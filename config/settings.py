@@ -113,11 +113,12 @@ if os.environ.get("DB_NAME"):
             "HOST": os.environ.get("DB_HOST", "localhost"),
             "PORT": os.environ.get("DB_PORT", "5432"),
             "CONN_MAX_AGE": 60,
+            "OPTIONS": {"sslmode": "require"},
         }
     }
 else:
     DATABASES = {
-        "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}
+        "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"},
     }
 
 # کش (برای محدودکردن نرخ درخواست‌ها). در production با چند worker بهتر است Redis باشد.
